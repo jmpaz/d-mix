@@ -2,9 +2,45 @@
 
 ## Workflow
 
+### Download
+
+Accept a list of URLs and download tracks to `.tmp/` for direct use.
+
+```python
+import subprocess
+import os
+
+def read_secrets(filename="secrets.txt"):
+    secrets = {}
+    with open(filename, "r") as file:
+        for line in file:
+            key, value = line.strip().split("=", 1)
+            secrets[key] = value
+    return secrets
+
+def download(urls, client_id, client_secret, target_dir=".tmp"):
+    # Set environment variables for the subprocess
+    env = os.environ.copy()
+    env['SPOTIFY_CLIENT_ID'] = client_id
+    env['SPOTIFY_CLIENT_SECRET'] = client_secret
+
+  # Prepare the command to run the downloader script with the target directory
+    command = ["python", "d-mix/downloader.py"] + urls + [target_dir]
+    
+    # Execute the script via subprocess with the updated environment
+    result = subprocess.run(command, capture_output=True, text=True, env=env)
+    
+    if result.returncode == 0:
+        print("Download successful")
+    else:
+        print(f"Download failed with error:\n{result.stderr}")
+
+secrets = read_secrets()
+download(["https://open.spotify.com/track/4cOdK2wGLETKBW3PvgPWqT"], secrets['client_id'], secrets['client_secret'])
+```
+
 ### Process
 Iterate over a list of audio file paths to separate the tracks.
-For now, we use `data/inputs/careless.mp3` and `data/inputs/forest.mp3`.
 
 ```python
 import os
@@ -40,7 +76,7 @@ class DemucsClient:
         print("Analyzing stems")
 
 
-tracks = ["data/samples/careless.mp3", "data/samples/forest.mp3"]
+tracks = [".tmp/Rick Astley - Never Gonna Give You Up.mp3"]
 client = DemucsClient(tracks)
 client.separate()
 ```
