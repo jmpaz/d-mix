@@ -1,0 +1,47 @@
+# d-mix
+
+## Workflow
+
+### Process
+Iterate over a list of audio file paths to separate the tracks.
+For now, we use `data/inputs/careless.mp3` and `data/inputs/forest.mp3`.
+
+```python
+import os
+import demucs.api
+
+class DemucsClient:
+    def __init__(self, base_tracks, stems=None):
+        self.base_tracks = base_tracks
+        self.stems = stems
+        self.separator = demucs.api.Separator()
+        
+    def separate(self):
+        # Separate the tracks with demucs
+        for track_path in self.base_tracks:
+            print(f"Processing {track_path}")
+
+            # Extract track stems
+            origin, stems = self.separator.separate_audio_file(track_path)
+
+            # Get the original file extension and construct the output directory
+            _, file_extension = os.path.splitext(track_path)
+            track_dir = f"outputs/{track_path.split('/')[-1].replace(file_extension, '')}"
+            os.makedirs(track_dir, exist_ok=True)
+
+            for stem, source in stems.items():
+                # Construct output file path
+                output_path = f"{track_dir}/{stem}{file_extension}"
+                demucs.api.save_audio(source, output_path, samplerate=self.separator.samplerate)
+        print("Separation completed.")
+              
+    def analyze(self):
+        # Per-stem analysis
+        print("Analyzing stems")
+
+
+tracks = ["data/samples/careless.mp3", "data/samples/forest.mp3"]
+client = DemucsClient(tracks)
+client.separate()
+```
+
