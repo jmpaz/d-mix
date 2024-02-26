@@ -32,14 +32,14 @@ class DemucsClient:
                 demucs.api.save_audio(
                     source, output_path, samplerate=self.separator.samplerate
                 )
-                output_paths.append((stem, output_path))
+                output_paths.append(output_path)
 
             print("Saving 'no_vocals'")
             no_vocals_path = f"{track_dir}/all, minus vocals{file_extension}"
             demucs.api.save_audio(
                 no_vocals, no_vocals_path, samplerate=self.separator.samplerate
             )
-            output_paths.append(("no_vocals", no_vocals_path))
+            output_paths = [no_vocals_path] + output_paths
 
         print("Separation completed.")
         return output_paths
