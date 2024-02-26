@@ -59,6 +59,8 @@ class DemucsClient:
 
             # Extract track stems
             origin, stems = self.separator.separate_audio_file(track_path)
+            vocals = stems['vocals']
+            no_vocals = origin - vocals
 
             # Get the original file extension and construct the output directory
             _, file_extension = os.path.splitext(track_path)
@@ -69,6 +71,10 @@ class DemucsClient:
                 # Construct output file path
                 output_path = f"{track_dir}/{stem}{file_extension}"
                 demucs.api.save_audio(source, output_path, samplerate=self.separator.samplerate)
+
+            no_vocals_path = f"{track_dir}/all, minus vocals{file_extension}"
+            demucs.api.save_audio(no_vocals, no_vocals_path, samplerate=self.separator.samplerate)
+
         print("Separation completed.")
               
     def analyze(self):
