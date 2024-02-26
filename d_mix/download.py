@@ -4,7 +4,7 @@ from pathlib import Path
 from spotdl import Spotdl
 
 
-def download_tracks(urls, target_dir):
+def download_tracks(urls, target_dir=".tmp"):
     # Retrieve secrets from environment variables
     client_id = os.environ.get("SPOTIFY_CLIENT_ID")
     client_secret = os.environ.get("SPOTIFY_CLIENT_SECRET")
