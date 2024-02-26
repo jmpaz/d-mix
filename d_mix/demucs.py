@@ -9,7 +9,8 @@ class DemucsClient:
         self.separator = demucs.api.Separator()
 
     def separate(self):
-        # Separate the tracks with demucs
+        output_paths = []
+
         for track_path in self.base_tracks:
             print(f"Processing {track_path}")
 
@@ -26,15 +27,19 @@ class DemucsClient:
             os.makedirs(track_dir, exist_ok=True)
 
             for stem, source in stems.items():
-                # Construct output file path
+                print(f"Saving '{stem}'")
                 output_path = f"{track_dir}/{stem}{file_extension}"
                 demucs.api.save_audio(
                     source, output_path, samplerate=self.separator.samplerate
                 )
+                output_paths.append((stem, output_path))
 
+            print("Saving 'no_vocals'")
             no_vocals_path = f"{track_dir}/all, minus vocals{file_extension}"
             demucs.api.save_audio(
                 no_vocals, no_vocals_path, samplerate=self.separator.samplerate
             )
+            output_paths.append(("no_vocals", no_vocals_path))
 
         print("Separation completed.")
+        return output_paths
