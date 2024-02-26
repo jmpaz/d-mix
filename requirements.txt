@@ -1,1 +1,2 @@
 git+https://github.com/adefossez/demucs
+spotdl==4.2.4
