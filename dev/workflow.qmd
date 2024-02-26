@@ -25,7 +25,7 @@ def download(urls, client_id, client_secret, target_dir=".tmp"):
     env['SPOTIFY_CLIENT_SECRET'] = client_secret
 
   # Prepare the command to run the downloader script with the target directory
-    command = ["python", "d-mix/downloader.py"] + urls + [target_dir]
+    command = ["python", "d_mix/downloader.py"] + urls + [target_dir]
     
     # Execute the script via subprocess with the updated environment
     result = subprocess.run(command, capture_output=True, text=True, env=env)
@@ -87,3 +87,8 @@ client = DemucsClient(tracks)
 client.separate()
 ```
 
+
+## Gradio
+```python
+
+```
